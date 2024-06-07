@@ -1,0 +1,27 @@
+GenKeys Version 2
+
+Contact: salvatore@isi-technology.com
+
+# Requirements:
+
+Python 3
+
+# Command Line Instructions:
+
+Open a terminal to the src folder.
+
+Either open the folder in terminal or in terminal type
+
+`cd <where you put genkeys>/RouteGenieAPI_GenKeys/src`
+
+Then type
+
+`python -m GenKeys`
+
+or 
+
+`python3 -m GenKeys`
+
+# Aliasing the python script to a mac command alias
+
+https://medium.com/@meiyee715/creating-an-alias-to-run-a-python-script-in-macos-terminal-c87019e183dd
