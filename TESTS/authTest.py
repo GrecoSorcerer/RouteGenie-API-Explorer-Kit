@@ -10,8 +10,6 @@
 import requests
 import json
 import base64
-from pprint import pprint
-
 
 def get_access_token(client_secret, client_id):
     """Returns the base64 encoded access token credential.
@@ -58,7 +56,9 @@ if __name__ == "__main__":
     payload = {'grant_type': 'client_credentials'}
 
     # Request authorization token.
-    token_request = requests.post(f"{ENV['HOST']}oauth2/token/", headers=header, data=payload)
+    token_request = requests.post(f"{ENV['HOST']}oauth2/token/", 
+                                  headers=header, 
+                                  data=payload)
 
     # Print out the request status and request text
     print(f'Requesting Authentication ["{ENV['HOST']}" - {token_request.status_code}]')    
@@ -71,7 +71,9 @@ if __name__ == "__main__":
         'Authorization': f'Bearer {token_request.json()['access_token']}'
     }
 
-    results = requests.request("GET", url, headers=headers, data=payload)
+    results = requests.get(url, 
+                           headers=headers, 
+                           data=payload)
 
     print(f"Verifying Access Token [{results.status_code}]")
 

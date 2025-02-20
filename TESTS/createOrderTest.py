@@ -8,13 +8,17 @@
 """Authentication and Create Order POST request test."""
 
 import requests
-import json
-import base64
+
+# We import authTest so we can reuse its functionality
 import authTest as auth
+from authTest import get_access_token
+
+# Get the ENV from authTest.py
+ENV = auth.ENV
 
 # Set the Header
 header = {
-    "Authorization": f"Basic {auth.get_access_token(auth.ENV['SECRET'], auth.ENV['CLIENTID'])}",
+    "Authorization": f"Basic {get_access_token(ENV['SECRET'], ENV['CLIENTID'])}",
     "Content-Type": "application/x-www-form-urlencoded"
 }
 
@@ -22,24 +26,23 @@ header = {
 payload = {'grant_type': 'client_credentials'}
 
 # Request authorization token.
-token_request = requests.post(f"{auth.ENV['HOST']}oauth2/token/", headers=header, data=payload)
+token_request = requests.post(f"{ENV['HOST']}oauth2/token/",
+                              headers=header,
+                              data=payload)
 access_token = token_request.json()['access_token']
 
 # Print out the request status and request text
 print(token_request.status_code)
-
 print(token_request.text)
 
-# Print out the request status and request text
-print(token_request.status_code)
-print(token_request.text)
-
-payload = auth.ENV["TEST_RIDE"]
+payload = ENV["TEST_RIDE"]
 
 headers = {
   'Authorization': f'Bearer {access_token}'
 }
 
-response = requests.request("POST", "https://demo.routegenie.com:8000/open_api/api/v1/order/", headers=headers, data=payload)
+response = requests.post(f"{ENV["HOST"]}open_api/api/v1/order/", 
+                         headers=headers, 
+                         data=payload)
 
 print(response.content)
