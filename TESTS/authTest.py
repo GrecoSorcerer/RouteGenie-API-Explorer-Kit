@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 ### Salvatore L Greco <salvatore@isi-technology.com>
-### 7/26/2023
 ### ISI Technology/RouteGenie Support and Integrations
 
 """Authentication POST request test."""

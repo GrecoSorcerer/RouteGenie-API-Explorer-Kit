@@ -2,10 +2,9 @@
 # -*- coding: utf-8 -*-
 
 ### Salvatore L Greco <salvatore@isi-technology.com>
-### 7/26/2023
 ### ISI Technology/RouteGenie Support and Integrations
 
-"""Authentication and Create Order POST request test."""
+"""Authentication and POST Create Order request test."""
 
 import requests
 

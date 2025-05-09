@@ -3,7 +3,7 @@
 ### Salvatore L Greco <salvatore@isi-technology.com>
 ### ISI Technology/RouteGenie Support and Integrations
 
-"""Authentication and GET Order request test."""
+"""Authentication and GET List of Order request test."""
 
 import requests
 
@@ -41,13 +41,9 @@ try:
         'Authorization': f'Bearer {access_token}'
     }
 
-    PARAM = {
-        "ride_id":ENV["TEST_RIDE"]["ride_id"]
-    }
+    query_string = f"{ENV['HOST']}open_api/api/v1/order/?start_date={ENV['FROM_DATE']}&end_date={ENV['TO_DATE']}"
 
-    query_string = f"{ENV['HOST']}open_api/api/v1/order/{PARAM['ride_id']}/"
-
-    print(f"Querying ORDER {PARAM['ride_id']}")
+    print("Bulk Querying ORDERS")
     queryorders = requests.get(query_string, 
                                headers = HEADER)
 
