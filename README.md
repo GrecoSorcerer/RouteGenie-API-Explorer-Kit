@@ -35,6 +35,9 @@ Use these tests to incrementally explore the behavior of the API.
 
 The tests as written expect an enviorment file in the TESTS directory
 
+
+### authTest.py
+
 `./TESTS/enviornment.json`
 
 ```json
@@ -46,7 +49,7 @@ The tests as written expect an enviorment file in the TESTS directory
 }
 ```
 
-### authTest.py
+
 This example test will:
 - load the enviornment file
 - make a request to `{HOST}oauth2/token/` using CLIENTID and SECRET
@@ -55,15 +58,20 @@ This example test will:
 
 ### createOrderTest.py
 
-This example test will require a TESTRIDE in your enviornment.json file
+This example test will require a `TESTRIDE` in your enviornment.json file
+
+`./TESTS/enviornment.json`
 
 ```json
+    "SECRET":"your-secret",
+    "CLIENTID":"your-clientid",
+    "HOST":"https://your-subdomain.routegenie.com:8000/",
     ...
     "TESTRIDE":{
-        "ride_id": "TESTID001",
+        "ride_id": "id-for-this-test",
         "client_internal_id": 1,
         "custom_trip_type": 1,
-        "initial_time": "10/01/2025 16:30",
+        "initial_time": "MM/DD/YYYY HH:MM",
         "pick_up_address":"241 Main St Buffalo NY",
         "drop_off_address":"490 Delaware Ave Buffalo NY",
         "payment_method":1
@@ -73,7 +81,7 @@ This example test will require a TESTRIDE in your enviornment.json file
 This test will:
  
 - use authTest.py to request an access token
-   - print the status and response as text
+   - print the status
 - request an order using the properties added to the enviorment.json file
    - print the order information if it was successfully created.
 - return the order details of the created ride, if successful
@@ -81,12 +89,60 @@ This test will:
 
 ### accessOrderTest.py
 
+This test will require a *from date* and a *to date* to query.
+
+`./TESTS/enviornment.json`
+
+```json
+{
+    "SECRET":"your-secret",
+    "CLIENTID":"your-clientid",
+    "HOST":"https://your-subdomain.routegenie.com:8000/",
+    "FROM_DATE":"M/DD/YYYY",
+    "TO_DATE":"M/DD/YYYY",
+    ...
+}
+```
 This test will:
 
 - use authTest.py to request an access token
-   - print the status and response as text
+   - print the status
 - query the order of with ride_id
    - return the status code and either return the order details or failure reasons if possilbe. 
+
+### generateReportTest.py
+
+
+This test will require a `REPORT_REQUEST` in your `environment.json` file.
+
+`./TESTS/enviornment.json`
+
+```json
+{
+    "SECRET":"your-secret",
+    "CLIENTID":"your-clientid",
+    "HOST":"https://your-subdomain.routegenie.com:8000/",
+    ...
+    "REPORT_REQUEST": {
+        "name": "TEST API REPORT",
+        "creator": 662,
+        "template": 251,
+        "period_from":"M/DD/YYYY",
+        "period_to":"M/DD/YYYY"
+    }
+}
+```
+Currenlty this test assumes you know the internal id of the template and its creator
+you wish to generate a report for.
+
+**A template must exist on the instacne you a requesting the report from.**
+
+This test will:
+
+- use authTest.py to request an access token
+  - print the status
+- using the template defined in your environment `REPORT_REQUEST` data, request your instance generate a report using the date range from the `REPORT_REQUEST` data.
+- get the report from the instance and print the CSV data.
    
 ## UTILS
 Tools and utilities that might come in handy!

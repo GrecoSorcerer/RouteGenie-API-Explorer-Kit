@@ -7,41 +7,41 @@
 """Authentication and POST Create Order request test."""
 
 import requests
+from pprint import pprint
 
 # We import authTest so we can reuse its functionality
 import authTest as auth
 from authTest import get_access_token
 
-# Get the ENV from authTest.py
+# Get the ENVironment from authTest.py
 ENV = auth.ENV
 
-# Set the Header
-header = {
-    "Authorization": f"Basic {get_access_token(ENV['SECRET'], ENV['CLIENTID'])}",
-    "Content-Type": "application/x-www-form-urlencoded"
+url = f"{ENV["HOST"]}open_api/api/v1/order/"
+# Request access token.
+access_token = get_access_token()
+headers = {
+    'Authorization': f'Bearer {access_token}'
 }
-
-# set the Payload
-payload = {'grant_type': 'client_credentials'}
-
-# Request authorization token.
-token_request = requests.post(f"{ENV['HOST']}oauth2/token/",
-                              headers=header,
-                              data=payload)
-access_token = token_request.json()['access_token']
-
-# Print out the request status and request text
-print(token_request.status_code)
-print(token_request.text)
-
+# Get the Test Ride from the ENVironment
 payload = ENV["TEST_RIDE"]
 
-headers = {
-  'Authorization': f'Bearer {access_token}'
-}
+print(f"\n------\nRequesting ride for client_id {ENV["TEST_RIDE"]["client_internal_id"]}")
+print(f"From {ENV["TEST_RIDE"]["pick_up_address"]}")
+print(f"To {ENV["TEST_RIDE"]["drop_off_address"]}")
+if ENV["TEST_RIDE"]["initial_time"]:
+    at_text = f"Pickup At {ENV["TEST_RIDE"]["initial_time"]}"
+elif ENV["TEST_RIDE"]["appointment_time"]:
+    at_text = f"Dropoff by {ENV["TEST_RIDE"]["appointment_time"]}"
+print(f"{at_text}")
 
-response = requests.post(f"{ENV["HOST"]}open_api/api/v1/order/", 
-                         headers=headers, 
-                         data=payload)
+response = requests.post(
+    url, 
+    headers=headers, 
+    data=payload
+)
 
-print(response.content)
+match response.status_code:
+    case 201:
+        print(f"Ride created successfully [{response.status_code}]")
+    case _:
+        print(f"Ride could not be created [{response.status_code}]")

@@ -16,25 +16,8 @@ from authTest import get_access_token
 # Get the ENV from authTest.py
 ENV = auth.ENV
 
-# Set the Header
-header = {
-    "Authorization": f"Basic {get_access_token(ENV['SECRET'], 
-                                               ENV['CLIENTID'])}",
-    "Content-Type": "application/x-www-form-urlencoded"
-}
-
-# set the Payload
-payload = {'grant_type': 'client_credentials'}
-
-# Request authorization token.
-token_request = requests.post(f"{ENV['HOST']}oauth2/token/", 
-                              headers=header, 
-                              data=payload)
-access_token = token_request.json()['access_token']
-
-# Print out the request status and request text
-print(f'Requesting Authentication ["{ENV['HOST']}" - {token_request.status_code}]')    
-print(f"->  {token_request.text}")
+# Request access token.
+access_token = get_access_token()
 
 try:
     HEADER = {
@@ -48,14 +31,16 @@ try:
     query_string = f"{ENV['HOST']}open_api/api/v1/order/{PARAM['ride_id']}/"
 
     print(f"Querying ORDER {PARAM['ride_id']}")
-    queryorders = requests.get(query_string, 
-                               headers = HEADER)
+    queryorders = requests.get(
+        query_string, 
+        headers = HEADER
+    )
+    
+    order =  queryorders.json()
 
     print(f"Query Order Response: [{queryorders.status_code}]")
- 
-    DATA = queryorders.json()
+    print(f"From {order["drop_off_address"]}")
+    print(f"To {order["initial_time"]}")
 
-    pprint(DATA, indent=4)
 except:
-    print(f"This request could not be processed! Request Status Code [{queryorders.status_code}]")
-    print(f"->  {queryorders.reason}")
+    print(f"    This request could not be processed!\n    Check that you have correctly setup your environment.json file,\n    and that your API credentials are correct.")
